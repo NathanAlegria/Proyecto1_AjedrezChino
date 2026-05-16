@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class VentanaSeleccionOponente extends JFrame {
     public VentanaSeleccionOponente(Jugador jugadorActual, ArrayList<String> opciones,
-                                     GestorDatosImpl gestor, MenuPrincipal menuPrincipal) {
+                                    GestorDatosImpl gestor, MenuPrincipal menuPrincipal) {
         setTitle("Seleccionar Oponente");
         setSize(400, 350);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -24,18 +24,11 @@ public class VentanaSeleccionOponente extends JFrame {
         panel.setLayout(new BorderLayout());
         setContentPane(panel);
 
-        // Flecha de regreso
-        JButton btnAtras = new JButton("← Atrás");
-        btnAtras.setOpaque(false);
-        btnAtras.setForeground(Color.WHITE);
-        btnAtras.setBorderPainted(false);
-        btnAtras.setContentAreaFilled(false);
-        btnAtras.setFont(new Font("Arial", Font.BOLD, 13));
+        JButton btnAtras = crearBotonAtras();
         btnAtras.addActionListener(e -> {
             menuPrincipal.volverAqui();
             dispose();
         });
-
         JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelTop.setOpaque(false);
         panelTop.add(btnAtras);
@@ -50,15 +43,18 @@ public class VentanaSeleccionOponente extends JFrame {
         JList<String> lista = new JList<>(modelo);
         lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         lista.setSelectedIndex(0);
+        lista.setBackground(new Color(30, 30, 30, 180));
+        lista.setForeground(Color.WHITE);
+        lista.setFont(new Font("Arial", Font.PLAIN, 13));
 
-        JButton btnJugar = new JButton("JUGAR");
+        JButton btnJugar = crearBotonEstilo("  JUGAR  ", new Color(80, 200, 80));
         btnJugar.addActionListener(e -> {
             String seleccionado = lista.getSelectedValue();
             if (seleccionado != null) {
                 Jugador oponente = gestor.buscarJugador(seleccionado);
-                Partida partida = new Partida(jugadorActual, oponente);
+                Partida partida  = new Partida(jugadorActual, oponente);
                 dispose();
-                new VentanaJuego(partida, gestor, jugadorActual, oponente);
+                new VentanaJuego(partida, gestor, jugadorActual, oponente, menuPrincipal);
             }
         });
 
@@ -74,7 +70,42 @@ public class VentanaSeleccionOponente extends JFrame {
 
         panel.add(centro, BorderLayout.CENTER);
         panel.add(sur, BorderLayout.SOUTH);
-
         setVisible(true);
+    }
+
+    private JButton crearBotonAtras() {
+        return crearBotonEstilo("← Atrás", Color.WHITE);
+    }
+
+    private JButton crearBotonEstilo(String texto, Color colorBorde) {
+        JButton btn = new JButton(texto) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON);
+                if (getModel().isRollover()) {
+                    g2.setColor(new Color(colorBorde.getRed(),
+                            colorBorde.getGreen(), colorBorde.getBlue(), 80));
+                } else {
+                    g2.setColor(new Color(colorBorde.getRed(),
+                            colorBorde.getGreen(), colorBorde.getBlue(), 30));
+                }
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 12, 12);
+                g2.setColor(colorBorde);
+                g2.setStroke(new BasicStroke(1.5f));
+                g2.drawRoundRect(1, 1, getWidth() - 2, getHeight() - 2, 12, 12);
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        btn.setContentAreaFilled(false);
+        btn.setBorderPainted(false);
+        btn.setOpaque(false);
+        btn.setForeground(colorBorde);
+        btn.setFont(new Font("Arial", Font.BOLD, 12));
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btn.setFocusPainted(false);
+        return btn;
     }
 }

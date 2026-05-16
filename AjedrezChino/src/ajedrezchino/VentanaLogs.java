@@ -6,7 +6,6 @@ package ajedrezchino;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
 import java.util.ArrayList;
 /**
  *
@@ -24,17 +23,11 @@ public class VentanaLogs extends JFrame {
         panel.setLayout(new BorderLayout());
         setContentPane(panel);
 
-        JButton btnAtras = new JButton("← Atrás");
-        btnAtras.setOpaque(false);
-        btnAtras.setForeground(Color.WHITE);
-        btnAtras.setBorderPainted(false);
-        btnAtras.setContentAreaFilled(false);
-        btnAtras.setFont(new Font("Arial", Font.BOLD, 13));
+        JButton btnAtras = BotonesEstilo.crearBotonAtras();
         btnAtras.addActionListener(e -> {
             reportes.volverAqui();
             dispose();
         });
-
         JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelTop.setOpaque(false);
         panelTop.add(btnAtras);
@@ -56,30 +49,9 @@ public class VentanaLogs extends JFrame {
         JScrollPane scroll = new JScrollPane(area);
         scroll.setOpaque(false);
         scroll.getViewport().setOpaque(false);
+        scroll.setBorder(BorderFactory.createEmptyBorder(5, 20, 10, 20));
         panel.add(scroll, BorderLayout.CENTER);
 
-        JButton btnExportar = new JButton("Exportar a .txt");
-        btnExportar.addActionListener(e -> exportar(sb.toString(), jugador.getUsername()));
-        JPanel sur = new JPanel();
-        sur.setOpaque(false);
-        sur.add(btnExportar);
-        panel.add(sur, BorderLayout.SOUTH);
-
         setVisible(true);
-    }
-
-    private void exportar(String contenido, String username) {
-        JFileChooser chooser = new JFileChooser();
-        chooser.setSelectedFile(new File(username + "_logs.txt"));
-        int result = chooser.showSaveDialog(this);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            try {
-                FileWriter fw = new FileWriter(chooser.getSelectedFile());
-                fw.write(contenido);
-                fw.close();
-            } catch (IOException ex) {
-                // Error silencioso
-            }
-        }
     }
 }
