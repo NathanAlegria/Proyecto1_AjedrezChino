@@ -14,5 +14,5 @@ public class Main {
             new MenuInicio();
         });
     }
-}
+} 
     

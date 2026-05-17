@@ -2,7 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 package ajedrezchino;
+
+import java.util.ArrayList;
 
 /**
  *
@@ -14,50 +17,57 @@ public class Partida {
     private Tablero tablero;
     private boolean turnoRojo;
     private boolean activa;
+    private int ultimoError = Tablero.OK;
+
+    // Cementerios guardados dentro de la partida
+    private ArrayList<Pieza> muertosBlancos = new ArrayList<>();
+    private ArrayList<Pieza> muertosNegros  = new ArrayList<>();
 
     public Partida(Jugador jugadorRojo, Jugador jugadorNegro) {
-        this.jugadorRojo = jugadorRojo;
+        this.jugadorRojo  = jugadorRojo;
         this.jugadorNegro = jugadorNegro;
-        this.tablero = new Tablero();
-        this.turnoRojo = true;
-        this.activa = true;
+        this.tablero      = new Tablero();
+        this.turnoRojo    = true;
+        this.activa       = true;
     }
 
-    public boolean intentarMover(int filaOrigen, int colOrigen, int filaDestino, int colDestino) {
+    public boolean intentarMover(int fo, int co, int fd, int cd) {
         if (!activa) return false;
+        Pieza p = tablero.getPieza(fo, co);
+        if (p == null) { ultimoError = Tablero.ERR_VACIO; return false; }
 
-        Pieza pieza = tablero.getPieza(filaOrigen, colOrigen);
-        if (pieza == null) return false;
-        if (pieza.isEsRojo() != turnoRojo) return false;
+        // Guardar pieza capturada antes del movimiento
+        Pieza capturada = tablero.getPieza(fd, cd);
 
-        Pieza capturada = tablero.getPieza(filaDestino, colDestino);
-        boolean movido = tablero.moverPieza(filaOrigen, colOrigen, filaDestino, colDestino);
+        ultimoError = tablero.intentarMoverConRazon(fo, co, fd, cd, turnoRojo);
+        if (ultimoError != Tablero.OK) return false;
 
-        if (movido) {
-            // Verificar si se capturó un General
-            if (capturada instanceof General) {
-                activa = false;
-            }
-            turnoRojo = !turnoRojo;
+        // Agregar al cementerio correcto
+        if (capturada != null) {
+            if (capturada.isEsRojo()) muertosBlancos.add(capturada);
+            else                      muertosNegros.add(capturada);
         }
-        return movido;
+
+        if (!tablero.hayGeneral(!turnoRojo)) activa = false;
+        turnoRojo = !turnoRojo;
+        return true;
     }
 
-    public void retirar(boolean seretiróRojo) {
-        activa = false;
-        // El que no se retiró gana
-    }
+    public int     getUltimoError()     { return ultimoError; }
+    public void    retirar(boolean b)   { activa = false; }
+    public Tablero getTablero()         { return tablero; }
+    public boolean isTurnoRojo()        { return turnoRojo; }
+    public boolean isActiva()           { return activa; }
+    public Jugador getJugadorRojo()     { return jugadorRojo; }
+    public Jugador getJugadorNegro()    { return jugadorNegro; }
 
-    public Tablero getTablero() { return tablero; }
-    public boolean isTurnoRojo() { return turnoRojo; }
-    public boolean isActiva() { return activa; }
-    public Jugador getJugadorRojo() { return jugadorRojo; }
-    public Jugador getJugadorNegro() { return jugadorNegro; }
+    public ArrayList<Pieza> getMuertosBlancos() { return muertosBlancos; }
+    public ArrayList<Pieza> getMuertosNegros()  { return muertosNegros; }
 
     public Jugador getGanador(boolean seRetiroRojo) {
-        if (seRetiroRojo) return jugadorNegro;
+        if (seRetiroRojo)               return jugadorNegro;
         if (!tablero.hayGeneral(false)) return jugadorRojo;
-        if (!tablero.hayGeneral(true)) return jugadorNegro;
+        if (!tablero.hayGeneral(true))  return jugadorNegro;
         return null;
     }
 }

@@ -29,7 +29,7 @@ public class MiCuenta extends JFrame {
         panel.setLayout(new BorderLayout());
         setContentPane(panel);
 
-        // Flecha atrás
+        // Atrás
         JButton btnAtras = BotonesEstilo.crearBotonAtras();
         btnAtras.addActionListener(e -> { menuPrincipal.volverAqui(); dispose(); });
         JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -37,8 +37,8 @@ public class MiCuenta extends JFrame {
         panelTop.add(btnAtras);
         panel.add(panelTop, BorderLayout.NORTH);
 
-        // Caja semitransparente con los datos
-        JPanel cajaInfo = new JPanel(new GridLayout(5, 1, 0, 12)) {
+        // Caja semitransparente con datos (sin Activo)
+        JPanel cajaInfo = new JPanel(new GridLayout(3, 1, 0, 16)) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
@@ -53,8 +53,7 @@ public class MiCuenta extends JFrame {
         String[] datos = {
             "👤  Usuario:       " + jugador.getUsername(),
             "🏆  Puntos:        " + jugador.getPuntos(),
-            "📅  Registro:      " + jugador.getFechaIngreso(),
-            "✅  Estado:        " + (jugador.isActivo() ? "Activo" : "Inactivo"),
+            "📅  Registro:      " + jugador.getFechaIngreso()
         };
         for (String d : datos) {
             JLabel lbl = new JLabel(d);
@@ -68,7 +67,7 @@ public class MiCuenta extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 120, 0, 120);
-        cajaInfo.setPreferredSize(new Dimension(560, 220));
+        cajaInfo.setPreferredSize(new Dimension(560, 180));
         centroCaja.add(cajaInfo, gbc);
         panel.add(centroCaja, BorderLayout.CENTER);
 
@@ -77,13 +76,19 @@ public class MiCuenta extends JFrame {
         panelBotones.setOpaque(false);
         panelBotones.setBorder(BorderFactory.createEmptyBorder(10, 200, 50, 200));
 
-        JButton btnCambiar  = BotonesEstilo.crearBoton("🔑  Cambiar Password",  new Color(100, 180, 255));
-        JButton btnEliminar = BotonesEstilo.crearBoton("🗑  Eliminar Mi Cuenta", new Color(200, 70, 70));
+        JButton btnCambiar  = BotonesEstilo.crearBoton("🔑  Cambiar Password",   new Color(100, 180, 255));
+        JButton btnEliminar = BotonesEstilo.crearBoton("🗑  Eliminar Mi Cuenta",  new Color(200, 70, 70));
         btnCambiar.setFont(new Font("Arial", Font.BOLD, 16));
         btnEliminar.setFont(new Font("Arial", Font.BOLD, 16));
 
-        btnCambiar.addActionListener(e -> { new VentanaCambiarPassword(jugador, this); setVisible(false); });
-        btnEliminar.addActionListener(e -> { new VentanaEliminarCuenta(jugador, gestor, this, menuPrincipal); setVisible(false); });
+        btnCambiar.addActionListener(e -> {
+            new VentanaCambiarPassword(jugador, this);
+            setVisible(false);
+        });
+        btnEliminar.addActionListener(e -> {
+            new VentanaEliminarCuenta(jugador, gestor, this, menuPrincipal);
+            setVisible(false);
+        });
 
         panelBotones.add(btnCambiar);
         panelBotones.add(btnEliminar);
