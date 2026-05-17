@@ -24,19 +24,18 @@ public class VentanaJuego extends JFrame {
     private JLabel lblTurno;
     private JPanel panelInfoJugadores;
 
-    // Cajas de muerte
     private ArrayList<Pieza> muertosBlancos = new ArrayList<>();
     private ArrayList<Pieza> muertosNegros  = new ArrayList<>();
-    private PanelMuertos panelMuertosNegro;   // fichas negras capturadas (arriba)
-    private PanelMuertos panelMuertosBlanco;  // fichas blancas capturadas (abajo)
+    private PanelMuertos panelMuertosNegro;
+    private PanelMuertos panelMuertosBlanco;
 
     private int filaSeleccionada = -1;
     private int colSeleccionada  = -1;
     private ArrayList<int[]> movimientosValidos = new ArrayList<>();
     private HashMap<String, ImageIcon> imagenes;
     private HashMap<String, ImageIcon> imagenesSmall;
-    private static final int TAM_CELDA   = 55;
-    private static final int TAM_MUERTO  = 32;
+    private static final int TAM_CELDA  = 55;
+    private static final int TAM_MUERTO = 32;
 
     public VentanaJuego(Partida partida, GestorDatosImpl gestor,
                         Jugador loggeado, Jugador oponente, MenuPrincipal menuPrincipal) {
@@ -53,13 +52,11 @@ public class VentanaJuego extends JFrame {
         setLayout(new BorderLayout(0, 0));
         getContentPane().setBackground(new Color(25, 25, 25));
 
-        // ── Norte: info jugadores ──
         panelInfoJugadores = new JPanel(new GridLayout(1, 2));
         panelInfoJugadores.setPreferredSize(new Dimension(0, 60));
         construirPanelJugadores();
         add(panelInfoJugadores, BorderLayout.NORTH);
 
-        // ── Centro: tablero ──
         panelTablero = new PanelTablero();
         panelTablero.addMouseListener(new MouseAdapter() {
             @Override
@@ -67,35 +64,28 @@ public class VentanaJuego extends JFrame {
         });
         add(panelTablero, BorderLayout.CENTER);
 
-        // ── Este: cajas de muerte ──
         JPanel panelEste = new JPanel(new GridLayout(2, 1, 0, 4));
         panelEste.setBackground(new Color(25, 25, 25));
         panelEste.setPreferredSize(new Dimension(160, 0));
         panelEste.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 6));
-
         panelMuertosNegro  = new PanelMuertos("Capturadas — NEGRO",
                 new Color(30, 70, 130), muertosNegros);
         panelMuertosBlanco = new PanelMuertos("Capturadas — BLANCO",
                 new Color(100, 75, 10), muertosBlancos);
-
         panelEste.add(panelMuertosNegro);
         panelEste.add(panelMuertosBlanco);
         add(panelEste, BorderLayout.EAST);
 
-        // ── Sur: turno + retiro ──
         JPanel panelSur = new JPanel(new BorderLayout());
         panelSur.setBackground(new Color(20, 20, 20));
         panelSur.setBorder(BorderFactory.createEmptyBorder(6, 10, 6, 10));
-
         lblTurno = new JLabel("", SwingConstants.CENTER);
         lblTurno.setFont(new Font("Arial", Font.BOLD, 15));
         actualizarTurnoLabel();
         panelSur.add(lblTurno, BorderLayout.CENTER);
-
         JButton btnRetirar = BotonesEstilo.crearBoton("⚑  RETIRAR", new Color(200, 60, 60));
         btnRetirar.addActionListener(e -> confirmarRetiro());
         panelSur.add(btnRetirar, BorderLayout.EAST);
-
         add(panelSur, BorderLayout.SOUTH);
 
         pack();
@@ -103,9 +93,6 @@ public class VentanaJuego extends JFrame {
         setVisible(true);
     }
 
-    // ────────────────────────────────────────────
-    // Panel cajas de muerte
-    // ────────────────────────────────────────────
     private class PanelMuertos extends JPanel {
         private String titulo;
         private ArrayList<Pieza> lista;
@@ -123,13 +110,9 @@ public class VentanaJuego extends JFrame {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                     RenderingHints.VALUE_ANTIALIAS_ON);
-
-            // Título
             g2.setFont(new Font("Arial", Font.BOLD, 10));
             g2.setColor(new Color(220, 200, 120));
             g2.drawString(titulo, 6, 14);
-
-            // Fichas muertas
             int x = 4, y = 20;
             for (Pieza p : lista) {
                 String key = getNombreImagen(p) + "_s";
@@ -137,23 +120,20 @@ public class VentanaJuego extends JFrame {
                 if (icon != null) {
                     g2.drawImage(icon.getImage(), x, y, null);
                 } else {
-                    g2.setColor(p.isEsRojo() ? new Color(240, 220, 150) : new Color(100, 150, 220));
+                    g2.setColor(p.isEsRojo()
+                            ? new Color(240, 220, 150) : new Color(100, 150, 220));
                     g2.fillOval(x + 2, y + 2, TAM_MUERTO - 6, TAM_MUERTO - 6);
                     g2.setColor(Color.WHITE);
                     g2.setFont(new Font("Arial", Font.BOLD, 8));
                     g2.drawString(p.getNombre(), x + 8, y + TAM_MUERTO / 2 + 3);
                 }
                 x += TAM_MUERTO + 2;
-                if (x + TAM_MUERTO > getWidth() - 4) {
-                    x = 4;
-                    y += TAM_MUERTO + 2;
-                }
+                if (x + TAM_MUERTO > getWidth() - 4) { x = 4; y += TAM_MUERTO + 2; }
             }
             g2.dispose();
         }
     }
 
-    // ────────────────────────────────────────────
     private void construirPanelJugadores() {
         panelInfoJugadores.removeAll();
 
@@ -161,32 +141,26 @@ public class VentanaJuego extends JFrame {
         pNeg.setBackground(partida.isTurnoRojo()
                 ? new Color(40, 40, 40) : new Color(30, 80, 140));
         pNeg.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, Color.GRAY));
-
         JLabel lNeg1 = new JLabel("  ◆ NEGRO — " + oponente.getUsername());
         lNeg1.setFont(new Font("Arial", Font.BOLD, 13));
         lNeg1.setForeground(new Color(150, 200, 255));
-
         JLabel lNeg2 = new JLabel("  Puntos: " + oponente.getPuntos()
                 + (!partida.isTurnoRojo() ? "  ◀ SU TURNO" : ""));
         lNeg2.setFont(new Font("Arial", Font.PLAIN, 11));
         lNeg2.setForeground(Color.LIGHT_GRAY);
-
         pNeg.add(lNeg1); pNeg.add(lNeg2);
 
         JPanel pBlanc = new JPanel(new GridLayout(2, 1));
         pBlanc.setBackground(partida.isTurnoRojo()
                 ? new Color(80, 60, 20) : new Color(40, 40, 40));
         pBlanc.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, Color.GRAY));
-
         JLabel lBlanc1 = new JLabel("  ◆ BLANCO — " + jugadorLoggeado.getUsername());
         lBlanc1.setFont(new Font("Arial", Font.BOLD, 13));
         lBlanc1.setForeground(new Color(255, 230, 150));
-
         JLabel lBlanc2 = new JLabel("  Puntos: " + jugadorLoggeado.getPuntos()
                 + (partida.isTurnoRojo() ? "  ◀ SU TURNO" : ""));
         lBlanc2.setFont(new Font("Arial", Font.PLAIN, 11));
         lBlanc2.setForeground(Color.LIGHT_GRAY);
-
         pBlanc.add(lBlanc1); pBlanc.add(lBlanc2);
 
         panelInfoJugadores.add(pNeg);
@@ -207,11 +181,9 @@ public class VentanaJuego extends JFrame {
                 try {
                     URL url = getClass().getResource("/Imagenes/" + nombre + ".png");
                     if (url != null) {
-                        // Tamaño normal para el tablero
                         Image img = new ImageIcon(url).getImage()
                                 .getScaledInstance(TAM_CELDA - 6, TAM_CELDA - 6, Image.SCALE_SMOOTH);
                         imagenes.put(nombre, new ImageIcon(img));
-                        // Tamaño pequeño para la caja de muerte
                         Image imgS = new ImageIcon(url).getImage()
                                 .getScaledInstance(TAM_MUERTO, TAM_MUERTO, Image.SCALE_SMOOTH);
                         imagenesSmall.put(nombre + "_s", new ImageIcon(imgS));
@@ -241,9 +213,6 @@ public class VentanaJuego extends JFrame {
                     movimientosValidos.add(new int[]{f, c});
     }
 
-    // ────────────────────────────────────────────
-    // Panel tablero interno
-    // ────────────────────────────────────────────
     private class PanelTablero extends JPanel {
         final int OFFSET_X = 25;
         final int OFFSET_Y = 5;
@@ -382,7 +351,6 @@ public class VentanaJuego extends JFrame {
         }
     }
 
-    // ────────────────────────────────────────────
     private void manejarClick(int x, int y) {
         if (!partida.isActiva()) return;
         int col  = (x - panelTablero.OFFSET_X) / TAM_CELDA;
@@ -406,18 +374,13 @@ public class VentanaJuego extends JFrame {
                 panelTablero.repaint();
                 return;
             }
-
-            // Guardar pieza capturada antes de mover
             Pieza capturada = partida.getTablero().getPieza(fila, col);
-
-            boolean movido = partida.intentarMover(
+            boolean movido  = partida.intentarMover(
                     filaSeleccionada, colSeleccionada, fila, col);
             filaSeleccionada = -1;
             colSeleccionada  = -1;
             movimientosValidos.clear();
-
             if (movido) {
-                // Agregar a caja de muerte si hubo captura
                 if (capturada != null) {
                     if (capturada.isEsRojo()) {
                         muertosBlancos.add(capturada);
@@ -447,17 +410,70 @@ public class VentanaJuego extends JFrame {
         }
     }
 
+    // ── CORREGIDO: mensajes distintos para ganador y perdedor ──
+    private void terminarJuego(Jugador ganador, Jugador perdedor, boolean porRetiro) {
+        ganador.agregarPuntos(3);
+
+        // Mensaje para el log del GANADOR
+        String msgGanador = porRetiro
+            ? perdedor.getUsername() + " SE HA RETIRADO — TU GANASTE 3 PUNTOS"
+            : "VENCISTE A " + perdedor.getUsername() + " — HAS GANADO 3 PUNTOS";
+
+        // Mensaje para el log del PERDEDOR
+        String msgPerdedor = porRetiro
+            ? "TE RETIRASTE — " + ganador.getUsername() + " GANO LA PARTIDA"
+            : perdedor.getUsername() + " FUE DERROTADO POR " + ganador.getUsername();
+
+        gestor.guardarLog(ganador.getUsername(),  msgGanador);
+        gestor.guardarLog(perdedor.getUsername(), msgPerdedor);
+
+        // Mensaje en pantalla: genérico para ambos
+        String msgPantalla = porRetiro
+            ? perdedor.getUsername() + " SE HA RETIRADO\nFELICIDADES "
+              + ganador.getUsername() + ", HAS GANADO 3 PUNTOS"
+            : ganador.getUsername() + " VENCIO A " + perdedor.getUsername()
+              + "\nFELICIDADES " + ganador.getUsername() + ", HAS GANADO 3 PUNTOS";
+
+        // Mostrar ventana centrada y SIEMPRE encima
+        mostrarMensajeFinal(msgPantalla);
+    }
+
+    // Ventana de mensaje final que no se pierde detrás de nada
+    private void mostrarMensajeFinal(String mensaje) {
+        JDialog dialogo = new JDialog((Frame) null, "FIN DEL JUEGO", true);
+        dialogo.setSize(420, 220);
+        dialogo.setLocationRelativeTo(null);
+        dialogo.setAlwaysOnTop(true);
+        dialogo.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+
+        PanelFondo fondo = new PanelFondo();
+        fondo.setLayout(new BorderLayout());
+        dialogo.setContentPane(fondo);
+
+        JLabel lbl = new JLabel(
+            "<html><center>" + mensaje.replace("\n", "<br>") + "</center></html>",
+            SwingConstants.CENTER);
+        lbl.setFont(new Font("Arial", Font.BOLD, 15));
+        lbl.setForeground(new Color(255, 220, 80));
+        lbl.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
+        fondo.add(lbl, BorderLayout.CENTER);
+
+        JButton btnOk = BotonesEstilo.crearBoton("  ACEPTAR  ", new Color(100, 200, 100));
+        btnOk.addActionListener(e -> dialogo.dispose());
+        JPanel sur = new JPanel();
+        sur.setOpaque(false);
+        sur.add(btnOk);
+        fondo.add(sur, BorderLayout.SOUTH);
+
+        dialogo.setVisible(true); // bloquea hasta que el usuario le da OK
+    }
+
     private void verificarFinJuego() {
         if (!partida.isActiva()) {
             Jugador ganador = partida.getGanador(false);
             if (ganador == null) return;
             Jugador perdedor = (ganador == jugadorLoggeado) ? oponente : jugadorLoggeado;
-            String msg = ganador.getUsername() + " VENCIO A " + perdedor.getUsername()
-                       + ", FELICIDADES HAS GANADO 3 PUNTOS";
-            ganador.agregarPuntos(3);
-            gestor.guardarLog(jugadorLoggeado.getUsername(), msg);
-            gestor.guardarLog(oponente.getUsername(), msg);
-            VentanaMensaje.mostrar(this, msg, "FIN DEL JUEGO");
+            terminarJuego(ganador, perdedor, false);
             dispose();
             menuPrincipal.volverAqui();
         }
@@ -474,12 +490,7 @@ public class VentanaJuego extends JFrame {
                 partida.retirar(seRetiroRojo);
                 Jugador ganador  = seRetiroRojo ? oponente : jugadorLoggeado;
                 Jugador perdedor = seRetiroRojo ? jugadorLoggeado : oponente;
-                String msg = perdedor.getUsername() + " SE HA RETIRADO, FELICIDADES "
-                           + ganador.getUsername() + ", HAS GANADO 3 PUNTOS";
-                ganador.agregarPuntos(3);
-                gestor.guardarLog(jugadorLoggeado.getUsername(), msg);
-                gestor.guardarLog(oponente.getUsername(), msg);
-                VentanaMensaje.mostrar(null, msg, "FIN DEL JUEGO");
+                terminarJuego(ganador, perdedor, true);
                 dispose();
                 menuPrincipal.volverAqui();
             });

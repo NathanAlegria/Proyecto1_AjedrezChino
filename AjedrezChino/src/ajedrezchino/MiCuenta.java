@@ -16,12 +16,12 @@ public class MiCuenta extends JFrame {
     private MenuPrincipal menuPrincipal;
 
     public MiCuenta(Jugador jugador, GestorDatosImpl gestor, MenuPrincipal menuPrincipal) {
-        this.jugador = jugador;
-        this.gestor = gestor;
+        this.jugador       = jugador;
+        this.gestor        = gestor;
         this.menuPrincipal = menuPrincipal;
 
-        setTitle("Mi Cuenta - " + jugador.getUsername());
-        setSize(400, 420);
+        setTitle("Mi Cuenta");
+        setSize(800, 800);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -29,67 +29,68 @@ public class MiCuenta extends JFrame {
         panel.setLayout(new BorderLayout());
         setContentPane(panel);
 
-        // Flecha de regreso
-        JButton btnAtras = new JButton("← Atrás");
-        btnAtras.setOpaque(false);
-        btnAtras.setForeground(Color.WHITE);
-        btnAtras.setBorderPainted(false);
-        btnAtras.setContentAreaFilled(false);
-        btnAtras.setFont(new Font("Arial", Font.BOLD, 13));
-        btnAtras.addActionListener(e -> {
-            menuPrincipal.volverAqui();
-            dispose();
-        });
-
+        // Flecha atrás
+        JButton btnAtras = BotonesEstilo.crearBotonAtras();
+        btnAtras.addActionListener(e -> { menuPrincipal.volverAqui(); dispose(); });
         JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelTop.setOpaque(false);
         panelTop.add(btnAtras);
         panel.add(panelTop, BorderLayout.NORTH);
 
-        // Info
-        JPanel panelInfo = new JPanel(new GridLayout(4, 1, 5, 5));
-        panelInfo.setOpaque(false);
-        panelInfo.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
+        // Caja semitransparente con los datos
+        JPanel cajaInfo = new JPanel(new GridLayout(5, 1, 0, 12)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setColor(new Color(0, 0, 0, 140));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+                g2.dispose();
+            }
+        };
+        cajaInfo.setOpaque(false);
+        cajaInfo.setBorder(BorderFactory.createEmptyBorder(24, 40, 24, 40));
 
-        JLabel l1 = new JLabel("Username: " + jugador.getUsername());
-        JLabel l2 = new JLabel("Puntos: " + jugador.getPuntos());
-        JLabel l3 = new JLabel("Fecha de ingreso: " + jugador.getFechaIngreso());
-        JLabel l4 = new JLabel("Activo: " + jugador.isActivo());
-
-        for (JLabel l : new JLabel[]{l1, l2, l3, l4}) {
-            l.setForeground(Color.WHITE);
-            l.setFont(new Font("Arial", Font.PLAIN, 13));
-            panelInfo.add(l);
+        String[] datos = {
+            "👤  Usuario:       " + jugador.getUsername(),
+            "🏆  Puntos:        " + jugador.getPuntos(),
+            "📅  Registro:      " + jugador.getFechaIngreso(),
+            "✅  Estado:        " + (jugador.isActivo() ? "Activo" : "Inactivo"),
+        };
+        for (String d : datos) {
+            JLabel lbl = new JLabel(d);
+            lbl.setFont(new Font("Arial", Font.PLAIN, 18));
+            lbl.setForeground(Color.WHITE);
+            cajaInfo.add(lbl);
         }
-        panel.add(panelInfo, BorderLayout.CENTER);
+
+        JPanel centroCaja = new JPanel(new GridBagLayout());
+        centroCaja.setOpaque(false);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(0, 120, 0, 120);
+        cajaInfo.setPreferredSize(new Dimension(560, 220));
+        centroCaja.add(cajaInfo, gbc);
+        panel.add(centroCaja, BorderLayout.CENTER);
 
         // Botones
-        JPanel panelBotones = new JPanel(new GridLayout(2, 1, 5, 5));
+        JPanel panelBotones = new JPanel(new GridLayout(2, 1, 0, 16));
         panelBotones.setOpaque(false);
-        panelBotones.setBorder(BorderFactory.createEmptyBorder(5, 60, 20, 60));
+        panelBotones.setBorder(BorderFactory.createEmptyBorder(10, 200, 50, 200));
 
-        JButton btnCambiarPass = new JButton("Cambiar Password");
-        JButton btnEliminar = new JButton("Eliminar Mi Cuenta");
-        btnEliminar.setBackground(new Color(200, 50, 50));
-        btnEliminar.setForeground(Color.WHITE);
+        JButton btnCambiar  = BotonesEstilo.crearBoton("🔑  Cambiar Password",  new Color(100, 180, 255));
+        JButton btnEliminar = BotonesEstilo.crearBoton("🗑  Eliminar Mi Cuenta", new Color(200, 70, 70));
+        btnCambiar.setFont(new Font("Arial", Font.BOLD, 16));
+        btnEliminar.setFont(new Font("Arial", Font.BOLD, 16));
 
-        btnCambiarPass.addActionListener(e -> {
-            new VentanaCambiarPassword(jugador, this);
-            setVisible(false);
-        });
-        btnEliminar.addActionListener(e -> {
-            new VentanaEliminarCuenta(jugador, gestor, this, menuPrincipal);
-            setVisible(false);
-        });
+        btnCambiar.addActionListener(e -> { new VentanaCambiarPassword(jugador, this); setVisible(false); });
+        btnEliminar.addActionListener(e -> { new VentanaEliminarCuenta(jugador, gestor, this, menuPrincipal); setVisible(false); });
 
-        panelBotones.add(btnCambiarPass);
+        panelBotones.add(btnCambiar);
         panelBotones.add(btnEliminar);
         panel.add(panelBotones, BorderLayout.SOUTH);
 
         setVisible(true);
     }
 
-    public void volverAqui() {
-        setVisible(true);
-    }
+    public void volverAqui() { setVisible(true); }
 }

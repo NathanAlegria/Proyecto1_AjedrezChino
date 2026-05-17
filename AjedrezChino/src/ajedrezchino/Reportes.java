@@ -18,12 +18,12 @@ public class Reportes extends JFrame {
     private MenuPrincipal menuPrincipal;
 
     public Reportes(Jugador jugador, GestorDatosImpl gestor, MenuPrincipal menuPrincipal) {
-        this.jugador = jugador;
-        this.gestor = gestor;
+        this.jugador       = jugador;
+        this.gestor        = gestor;
         this.menuPrincipal = menuPrincipal;
 
         setTitle("Reportes");
-        setSize(400, 320);
+        setSize(800, 800);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -31,31 +31,34 @@ public class Reportes extends JFrame {
         panel.setLayout(new BorderLayout());
         setContentPane(panel);
 
-        JButton btnAtras = new JButton("← Atrás");
-        btnAtras.setOpaque(false);
-        btnAtras.setForeground(Color.WHITE);
-        btnAtras.setBorderPainted(false);
-        btnAtras.setContentAreaFilled(false);
-        btnAtras.setFont(new Font("Arial", Font.BOLD, 13));
-        btnAtras.addActionListener(e -> {
-            menuPrincipal.volverAqui();
-            dispose();
-        });
-
+        JButton btnAtras = BotonesEstilo.crearBotonAtras();
+        btnAtras.addActionListener(e -> { menuPrincipal.volverAqui(); dispose(); });
         JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelTop.setOpaque(false);
         panelTop.add(btnAtras);
-        panel.add(panelTop, BorderLayout.NORTH);
 
-        JPanel centro = new JPanel(new GridLayout(2, 1, 10, 10));
+        JLabel titulo = new JLabel("REPORTES", SwingConstants.CENTER);
+        titulo.setFont(new Font("Serif", Font.BOLD, 36));
+        titulo.setForeground(new Color(255, 220, 80));
+        titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+
+        JPanel norte = new JPanel(new BorderLayout());
+        norte.setOpaque(false);
+        norte.add(panelTop, BorderLayout.NORTH);
+        norte.add(titulo, BorderLayout.CENTER);
+        panel.add(norte, BorderLayout.NORTH);
+
+        JPanel centro = new JPanel(new GridLayout(2, 1, 0, 20));
         centro.setOpaque(false);
-        centro.setBorder(BorderFactory.createEmptyBorder(30, 60, 40, 60));
+        centro.setBorder(BorderFactory.createEmptyBorder(100, 200, 180, 200));
 
-        JButton btnRanking = new JButton("1. Ranking de Jugadores");
-        JButton btnLogs = new JButton("2. Log de mis últimos partidos");
+        JButton btnRanking = BotonesEstilo.crearBoton("  🏆  Ranking de Jugadores  ", new Color(255, 200, 60));
+        JButton btnLogs    = BotonesEstilo.crearBoton("  📋  Mis últimos partidos  ", new Color(150, 200, 255));
+        btnRanking.setFont(new Font("Arial", Font.BOLD, 18));
+        btnLogs.setFont(new Font("Arial", Font.BOLD, 18));
 
-        btnRanking.addActionListener(e -> mostrarRanking());
-        btnLogs.addActionListener(e -> mostrarLogs());
+        btnRanking.addActionListener(e -> { new VentanaRanking(gestor, this); setVisible(false); });
+        btnLogs.addActionListener(e -> { new VentanaLogs(jugador, gestor, this); setVisible(false); });
 
         centro.add(btnRanking);
         centro.add(btnLogs);
@@ -64,17 +67,5 @@ public class Reportes extends JFrame {
         setVisible(true);
     }
 
-    private void mostrarRanking() {
-        new VentanaRanking(gestor, this);
-        setVisible(false);
-    }
-
-    private void mostrarLogs() {
-        new VentanaLogs(jugador, gestor, this);
-        setVisible(false);
-    }
-
-    public void volverAqui() {
-        setVisible(true);
-    }
+    public void volverAqui() { setVisible(true); }
 }

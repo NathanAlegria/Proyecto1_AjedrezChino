@@ -17,7 +17,7 @@ public class MenuInicio extends JFrame {
     public MenuInicio() {
         gestor = new GestorDatosImpl();
         setTitle("Xiangqi - Ajedrez Chino");
-        setSize(520, 420);
+        setSize(800, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -25,44 +25,35 @@ public class MenuInicio extends JFrame {
         panel.setLayout(new BorderLayout());
         setContentPane(panel);
 
-        // Título
         JPanel panelTitulo = new JPanel(new GridLayout(2, 1));
         panelTitulo.setOpaque(false);
-        panelTitulo.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 0));
+        panelTitulo.setBorder(BorderFactory.createEmptyBorder(120, 0, 20, 0));
 
         JLabel titulo = new JLabel("XIANGQI", SwingConstants.CENTER);
-        titulo.setFont(new Font("Serif", Font.BOLD, 42));
+        titulo.setFont(new Font("Serif", Font.BOLD, 64));
         titulo.setForeground(new Color(255, 220, 80));
 
         JLabel subtitulo = new JLabel("AJEDREZ CHINO", SwingConstants.CENTER);
-        subtitulo.setFont(new Font("Arial", Font.BOLD, 16));
+        subtitulo.setFont(new Font("Arial", Font.BOLD, 22));
         subtitulo.setForeground(new Color(200, 180, 120));
 
         panelTitulo.add(titulo);
         panelTitulo.add(subtitulo);
         panel.add(panelTitulo, BorderLayout.NORTH);
 
-        // Botones
-        JPanel centro = new JPanel(new GridLayout(3, 1, 0, 14));
+        JPanel centro = new JPanel(new GridLayout(3, 1, 0, 20));
         centro.setOpaque(false);
-        centro.setBorder(BorderFactory.createEmptyBorder(20, 100, 40, 100));
+        centro.setBorder(BorderFactory.createEmptyBorder(60, 200, 120, 200));
 
         JButton btnLogin = BotonesEstilo.crearBoton("  INICIAR SESIÓN  ", new Color(255, 220, 80));
         JButton btnCrear = BotonesEstilo.crearBoton("  CREAR JUGADOR  ", new Color(100, 210, 100));
         JButton btnSalir = BotonesEstilo.crearBoton("  SALIR  ",          new Color(200, 80, 80));
 
-        btnLogin.setFont(new Font("Arial", Font.BOLD, 15));
-        btnCrear.setFont(new Font("Arial", Font.BOLD, 15));
-        btnSalir.setFont(new Font("Arial", Font.BOLD, 15));
+        for (JButton b : new JButton[]{btnLogin, btnCrear, btnSalir})
+            b.setFont(new Font("Arial", Font.BOLD, 20));
 
-        btnLogin.addActionListener(e -> {
-            new VentanaLogin(gestor, this);
-            setVisible(false);
-        });
-        btnCrear.addActionListener(e -> {
-            new VentanaCrearJugador(gestor, this);
-            setVisible(false);
-        });
+        btnLogin.addActionListener(e -> { new VentanaLogin(gestor, this); setVisible(false); });
+        btnCrear.addActionListener(e -> { new VentanaCrearJugador(gestor, this); setVisible(false); });
         btnSalir.addActionListener(e -> System.exit(0));
 
         centro.add(btnLogin);
