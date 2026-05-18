@@ -173,17 +173,25 @@ public class VentanaJuego extends JFrame {
     private void construirPanelJugadores() {
         panelInfoJugadores.removeAll();
 
+        int valorNegro = TipoPieza.calcularValorEjercito(
+                false, partida.getTablero().getCasillas());
+        int valorBlanco = TipoPieza.calcularValorEjercito(
+                true, partida.getTablero().getCasillas());
+
+        // ── Panel NEGRO ──
         JPanel pNeg = new JPanel(new GridLayout(2, 1));
         pNeg.setBackground(!partida.isTurnoRojo()
                 ? new Color(30, 80, 140) : new Color(40, 40, 40));
-        pNeg.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2,
-                new Color(100, 100, 100)));
+        pNeg.setBorder(BorderFactory.createMatteBorder(
+                0, 0, 0, 2, new Color(100, 100, 100)));
 
         JLabel lN1 = new JLabel("    NEGRO  —  " + oponente.getUsername());
         lN1.setFont(new Font("Arial", Font.BOLD, 15));
         lN1.setForeground(new Color(150, 210, 255));
 
-        JLabel lN2 = new JLabel("  Puntos: " + oponente.getPuntos()
+        JLabel lN2 = new JLabel(
+                "  Puntos: " + oponente.getPuntos()
+                + "   |   Ejército: " + valorNegro
                 + (!partida.isTurnoRojo() ? "       SU TURNO" : ""));
         lN2.setFont(new Font("Arial", Font.BOLD, 12));
         lN2.setForeground(!partida.isTurnoRojo()
@@ -192,17 +200,20 @@ public class VentanaJuego extends JFrame {
         pNeg.add(lN1);
         pNeg.add(lN2);
 
+        // ── Panel BLANCO ──
         JPanel pBl = new JPanel(new GridLayout(2, 1));
         pBl.setBackground(partida.isTurnoRojo()
                 ? new Color(90, 65, 15) : new Color(40, 40, 40));
-        pBl.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0,
-                new Color(100, 100, 100)));
+        pBl.setBorder(BorderFactory.createMatteBorder(
+                0, 2, 0, 0, new Color(100, 100, 100)));
 
         JLabel lB1 = new JLabel("    BLANCO  —  " + jugadorLoggeado.getUsername());
         lB1.setFont(new Font("Arial", Font.BOLD, 15));
         lB1.setForeground(new Color(255, 230, 150));
 
-        JLabel lB2 = new JLabel("  Puntos: " + jugadorLoggeado.getPuntos()
+        JLabel lB2 = new JLabel(
+                "  Puntos: " + jugadorLoggeado.getPuntos()
+                + "   |   Ejército: " + valorBlanco
                 + (partida.isTurnoRojo() ? "       SU TURNO" : ""));
         lB2.setFont(new Font("Arial", Font.BOLD, 12));
         lB2.setForeground(partida.isTurnoRojo()
@@ -245,27 +256,9 @@ public class VentanaJuego extends JFrame {
     }
 
     private String getNombreImagen(Pieza p) {
-        String s = p.isEsRojo() ? "B" : "N";
-        if (p instanceof General) {
-            return "General" + s;
-        }
-        if (p instanceof Elefante) {
-            return "Elefante" + s;
-        }
-        if (p instanceof Caballo) {
-            return "Caballo" + s;
-        }
-        if (p instanceof Carro) {
-            return "CarrodeGuerra" + s;
-        }
-        if (p instanceof Soldado) {
-            return "Soldado" + s;
-        }
-        if (p instanceof Canon) {
-            return "Canon" + s;
-        }
-        if (p instanceof Oficial) {
-            return "Oficial" + s;
+        TipoPieza tipo = TipoPieza.desdePieza(p);
+        if (tipo != null) {
+            return tipo.getNombreImagen(p.isEsRojo());
         }
         return "";
     }
