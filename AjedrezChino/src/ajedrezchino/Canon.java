@@ -28,7 +28,7 @@ public class Canon extends Pieza {
             // Movimiento sin captura: camino libre
             return piezasEnMedio == 0;
         } else {
-            // Captura: exactamente 1 pieza en medio (pantalla) y enemigo en destino
+            // Captura: exactamente 1 pieza en medio
             if (piezasEnMedio == 1 && destino.isEsRojo() != this.esRojo) {
                 return true;
             }
@@ -36,7 +36,7 @@ public class Canon extends Pieza {
         }
     }
 
-    // Función recursiva #2: cuenta piezas entre origen y destino (sin incluir destino)
+    // Recursividad
     private int contarPiezasEnMedio(int filaActual, int colActual, int filaFin, int colFin, Pieza[][] tablero, int conteo) {
         int df = 0, dc = 0;
         if (filaFin > filaActual) df = 1;
@@ -47,7 +47,7 @@ public class Canon extends Pieza {
         int siguienteFila = filaActual + df;
         int siguienteCol = colActual + dc;
 
-        // Caso base: llegamos al destino (no lo contamos)
+        // Caso base
         if (siguienteFila == filaFin && siguienteCol == colFin) {
             return conteo;
         }

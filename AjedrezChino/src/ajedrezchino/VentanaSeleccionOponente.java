@@ -13,8 +13,9 @@ import java.util.ArrayList;
  * @author Nathan
  */
 public class VentanaSeleccionOponente extends JFrame {
+
     public VentanaSeleccionOponente(Jugador jugadorActual, ArrayList<String> opciones,
-                                    GestorDatosImpl gestor, MenuPrincipal menuPrincipal) {
+            GestorDatosImpl gestor, MenuPrincipal menuPrincipal) {
         setTitle("Seleccionar Oponente");
         setSize(400, 350);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -39,7 +40,9 @@ public class VentanaSeleccionOponente extends JFrame {
         lbl.setFont(new Font("Arial", Font.BOLD, 14));
 
         DefaultListModel<String> modelo = new DefaultListModel<>();
-        for (String op : opciones) modelo.addElement(op);
+        for (String op : opciones) {
+            modelo.addElement(op);
+        }
         JList<String> lista = new JList<>(modelo);
         lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         lista.setSelectedIndex(0);
@@ -52,7 +55,7 @@ public class VentanaSeleccionOponente extends JFrame {
             String seleccionado = lista.getSelectedValue();
             if (seleccionado != null) {
                 Jugador oponente = gestor.buscarJugador(seleccionado);
-                Partida partida  = new Partida(jugadorActual, oponente);
+                Partida partida = new Partida(jugadorActual, oponente);
                 dispose();
                 new VentanaJuego(partida, gestor, jugadorActual, oponente, menuPrincipal);
             }

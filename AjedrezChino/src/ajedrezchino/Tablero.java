@@ -11,18 +11,13 @@ package ajedrezchino;
 public class Tablero {
     private Pieza[][] casillas;
 
-    // El tablero es 10 filas x 9 columnas.
-    // Río: entre filas 4 y 5 (ninguna pieza puede QUEDARSE allí, solo cruzar).
-    // Palacio negro : filas 0-2, columnas 3-5
-    // Palacio rojo  : filas 7-9, columnas 3-5
-
     public Tablero() {
         casillas = new Pieza[10][9];
         inicializar();
     }
 
     private void inicializar() {
-        // Negras (arriba)
+        // Negras 
         casillas[0][0] = new Carro(0,0,false);
         casillas[0][1] = new Caballo(0,1,false);
         casillas[0][2] = new Elefante(0,2,false);
@@ -40,7 +35,7 @@ public class Tablero {
         casillas[3][6] = new Soldado(3,6,false);
         casillas[3][8] = new Soldado(3,8,false);
 
-        // Rojas/Blancas (abajo)
+        // Blancas 
         casillas[9][0] = new Carro(9,0,true);
         casillas[9][1] = new Caballo(9,1,true);
         casillas[9][2] = new Elefante(9,2,true);
@@ -63,14 +58,13 @@ public class Tablero {
     public void  setPieza(int fila, int col, Pieza p) { casillas[fila][col] = p; }
     public Pieza[][] getCasillas() { return casillas; }
 
-    // ── Razones de movimiento inválido ──
     public static final int OK                   = 0;
     public static final int ERR_VACIO            = 1;
     public static final int ERR_NO_TU_TURNO      = 2;
     public static final int ERR_MOVIMIENTO       = 3;
     public static final int ERR_PIEZA_PROPIA      = 4;
     public static final int ERR_GENERALES         = 5;
-    public static final int ERR_RIO               = 6;  // no usado aquí, lo maneja cada pieza
+    public static final int ERR_RIO               = 6;  
     public static final int ERR_FUERA_PALACIO     = 7;
 
     public int intentarMoverConRazon(int fo, int co, int fd, int cd, boolean turnoRojo) {
@@ -78,7 +72,6 @@ public class Tablero {
         if (p == null)                        return ERR_VACIO;
         if (p.isEsRojo() != turnoRojo)        return ERR_NO_TU_TURNO;
 
-        // Validar reglas específicas con mensajes
         if (p instanceof Oficial || p instanceof General) {
             boolean enPalacio = estaEnPalacio(fd, cd, p.isEsRojo());
             if (!enPalacio)                   return ERR_FUERA_PALACIO;
@@ -91,7 +84,6 @@ public class Tablero {
 
         if (dejaPiezasGeneralesEnfrentados(fo, co, fd, cd)) return ERR_GENERALES;
 
-        // Realizar movimiento
         casillas[fd][cd] = p;
         casillas[fo][co] = null;
         p.setFila(fd); p.setColumna(cd);

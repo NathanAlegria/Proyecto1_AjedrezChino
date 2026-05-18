@@ -26,18 +26,17 @@ public final class General extends Pieza {
 
         // Debe quedarse en el palacio 3x3
         if (esRojo) {
-            // Palacio rojo: filas 7-9, columnas 3-5
+            // Palacio blanco
             if (nuevaFila < 7 || nuevaFila > 9 || nuevaCol < 3 || nuevaCol > 5) {
                 return false;
             }
         } else {
-            // Palacio negro: filas 0-2, columnas 3-5
+            // Palacio negro
             if (nuevaFila < 0 || nuevaFila > 2 || nuevaCol < 3 || nuevaCol > 5) {
                 return false;
             }
         }
 
-        // No puede caer sobre pieza propia
         Pieza destino = tablero[nuevaFila][nuevaCol];
         if (destino != null && destino.isEsRojo() == this.esRojo) {
             return false;
@@ -48,7 +47,6 @@ public final class General extends Pieza {
 
     // Función final: verifica la regla de generales enfrentados
     public final boolean generalesEnfrentados(int nuevaFila, int nuevaCol, Pieza[][] tablero) {
-        // Buscar al general enemigo
         int colEnemigo = -1;
         int filaEnemigo = -1;
         for (int f = 0; f < 10; f++) {
@@ -64,16 +62,15 @@ public final class General extends Pieza {
             return false;
         }
 
-        // Si quedan en la misma columna, verificar si hay piezas entre ellos
         if (nuevaCol == colEnemigo) {
             int filaMin = Math.min(nuevaFila, filaEnemigo) + 1;
             int filaMax = Math.max(nuevaFila, filaEnemigo);
             for (int f = filaMin; f < filaMax; f++) {
                 if (tablero[f][colEnemigo] != null) {
-                    return false; // Hay pieza en medio, no están enfrentados
+                    return false; 
                 }
             }
-            return true; // Enfrentados ilegalmente
+            return true;
         }
         return false;
     }

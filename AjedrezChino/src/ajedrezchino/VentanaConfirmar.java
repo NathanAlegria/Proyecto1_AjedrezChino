@@ -6,6 +6,7 @@ package ajedrezchino;
 
 import javax.swing.*;
 import java.awt.*;
+
 /**
  *
  * @author Nathan

@@ -6,20 +6,20 @@ package ajedrezchino;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
-import java.util.ArrayList;
+
 /**
  *
  * @author Nathan
  */
 public class Reportes extends JFrame {
+
     private Jugador jugador;
     private GestorDatosImpl gestor;
     private MenuPrincipal menuPrincipal;
 
     public Reportes(Jugador jugador, GestorDatosImpl gestor, MenuPrincipal menuPrincipal) {
-        this.jugador       = jugador;
-        this.gestor        = gestor;
+        this.jugador = jugador;
+        this.gestor = gestor;
         this.menuPrincipal = menuPrincipal;
 
         setTitle("Reportes");
@@ -32,7 +32,10 @@ public class Reportes extends JFrame {
         setContentPane(panel);
 
         JButton btnAtras = BotonesEstilo.crearBotonAtras();
-        btnAtras.addActionListener(e -> { menuPrincipal.volverAqui(); dispose(); });
+        btnAtras.addActionListener(e -> {
+            menuPrincipal.volverAqui();
+            dispose();
+        });
         JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelTop.setOpaque(false);
         panelTop.add(btnAtras);
@@ -52,13 +55,19 @@ public class Reportes extends JFrame {
         centro.setOpaque(false);
         centro.setBorder(BorderFactory.createEmptyBorder(100, 200, 180, 200));
 
-        JButton btnRanking = BotonesEstilo.crearBoton("  🏆  Ranking de Jugadores  ", new Color(255, 200, 60));
-        JButton btnLogs    = BotonesEstilo.crearBoton("  📋  Mis últimos partidos  ", new Color(150, 200, 255));
+        JButton btnRanking = BotonesEstilo.crearBoton("    Ranking de Jugadores  ", new Color(255, 200, 60));
+        JButton btnLogs = BotonesEstilo.crearBoton("    Mis últimos partidos  ", new Color(150, 200, 255));
         btnRanking.setFont(new Font("Arial", Font.BOLD, 18));
         btnLogs.setFont(new Font("Arial", Font.BOLD, 18));
 
-        btnRanking.addActionListener(e -> { new VentanaRanking(gestor, this); setVisible(false); });
-        btnLogs.addActionListener(e -> { new VentanaLogs(jugador, gestor, this); setVisible(false); });
+        btnRanking.addActionListener(e -> {
+            new VentanaRanking(gestor, this);
+            setVisible(false);
+        });
+        btnLogs.addActionListener(e -> {
+            new VentanaLogs(jugador, gestor, this);
+            setVisible(false);
+        });
 
         centro.add(btnRanking);
         centro.add(btnLogs);
@@ -67,5 +76,7 @@ public class Reportes extends JFrame {
         setVisible(true);
     }
 
-    public void volverAqui() { setVisible(true); }
+    public void volverAqui() {
+        setVisible(true);
+    }
 }

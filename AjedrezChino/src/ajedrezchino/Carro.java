@@ -21,12 +21,11 @@ public class Carro extends Pieza {
             return false;
         }
 
-        // Verificar que no haya piezas en el camino (recursivo)
+        // Verificar que no haya piezas en el camino 
         if (!caminoLibre(this.fila, this.columna, nuevaFila, nuevaCol, tablero)) {
             return false;
         }
 
-        // No puede caer sobre pieza propia
         Pieza destino = tablero[nuevaFila][nuevaCol];
         if (destino != null && destino.isEsRojo() == this.esRojo) {
             return false;
@@ -35,7 +34,7 @@ public class Carro extends Pieza {
         return true;
     }
 
-    // Función recursiva #1: verifica camino libre entre origen y destino
+    // Recursividad
     private boolean caminoLibre(int filaActual, int colActual, int filaFin, int colFin, Pieza[][] tablero) {
         int df = 0, dc = 0;
         if (filaFin > filaActual) df = 1;
@@ -46,12 +45,11 @@ public class Carro extends Pieza {
         int siguienteFila = filaActual + df;
         int siguienteCol = colActual + dc;
 
-        // Caso base: llegamos al destino
+        // Caso base
         if (siguienteFila == filaFin && siguienteCol == colFin) {
             return true;
         }
 
-        // Si hay pieza en el camino (no en destino), bloqueado
         if (tablero[siguienteFila][siguienteCol] != null) {
             return false;
         }

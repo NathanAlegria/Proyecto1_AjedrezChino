@@ -20,17 +20,16 @@ public class Caballo extends Pieza {
         int dc = nuevaCol - this.columna;
 
         // El caballo se mueve: 1 ortogonal + 1 diagonal
-        // Hay 8 posibles movimientos
         if (Math.abs(df) == 2 && Math.abs(dc) == 1) {
-            // Movió 2 vertical, 1 horizontal → paso ortogonal es vertical
+            // Mueve 2 vertical, 1 horizontal
             int filaBloqueo = this.fila + (df > 0 ? 1 : -1);
             if (tablero[filaBloqueo][this.columna] != null) return false;
         } else if (Math.abs(df) == 1 && Math.abs(dc) == 2) {
-            // Movió 1 vertical, 2 horizontal → paso ortogonal es horizontal
+            // Mueve 1 vertical, 2 horizontal 
             int colBloqueo = this.columna + (dc > 0 ? 1 : -1);
             if (tablero[this.fila][colBloqueo] != null) return false;
         } else {
-            return false; // No es movimiento de caballo
+            return false; 
         }
 
         // No puede caer sobre pieza propia

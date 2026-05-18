@@ -13,7 +13,6 @@ import java.awt.*;
  */
 public class BotonesEstilo {
 
-    // Botón transparente con borde redondeado, se adapta al fondo
     public static JButton crearBoton(String texto, Color colorBorde) {
         JButton btn = new JButton(texto) {
             @Override

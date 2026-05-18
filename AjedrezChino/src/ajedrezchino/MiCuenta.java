@@ -6,6 +6,7 @@ package ajedrezchino;
 
 import javax.swing.*;
 import java.awt.*;
+
 /**
  *
  * @author Nathan
@@ -37,7 +38,6 @@ public class MiCuenta extends JFrame {
         panelTop.add(btnAtras);
         panel.add(panelTop, BorderLayout.NORTH);
 
-        // Caja semitransparente con datos (sin Activo)
         JPanel cajaInfo = new JPanel(new GridLayout(3, 1, 0, 16)) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -51,9 +51,9 @@ public class MiCuenta extends JFrame {
         cajaInfo.setBorder(BorderFactory.createEmptyBorder(24, 40, 24, 40));
 
         String[] datos = {
-            "👤  Usuario:       " + jugador.getUsername(),
-            "🏆  Puntos:        " + jugador.getPuntos(),
-            "📅  Registro:      " + jugador.getFechaIngreso()
+            "  Usuario:       " + jugador.getUsername(),
+            "  Puntos:        " + jugador.getPuntos(),
+            "  Registro:      " + jugador.getFechaIngreso()
         };
         for (String d : datos) {
             JLabel lbl = new JLabel(d);
@@ -76,8 +76,8 @@ public class MiCuenta extends JFrame {
         panelBotones.setOpaque(false);
         panelBotones.setBorder(BorderFactory.createEmptyBorder(10, 200, 50, 200));
 
-        JButton btnCambiar  = BotonesEstilo.crearBoton("🔑  Cambiar Password",   new Color(100, 180, 255));
-        JButton btnEliminar = BotonesEstilo.crearBoton("🗑  Eliminar Mi Cuenta",  new Color(200, 70, 70));
+        JButton btnCambiar  = BotonesEstilo.crearBoton("  Cambiar Password",   new Color(100, 180, 255));
+        JButton btnEliminar = BotonesEstilo.crearBoton("  Eliminar Mi Cuenta",  new Color(200, 70, 70));
         btnCambiar.setFont(new Font("Arial", Font.BOLD, 16));
         btnEliminar.setFont(new Font("Arial", Font.BOLD, 16));
 

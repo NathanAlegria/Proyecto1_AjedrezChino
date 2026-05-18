@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package ajedrezchino;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -11,6 +12,7 @@ import java.awt.*;
  * @author Nathan
  */
 public class MenuPrincipal extends JFrame {
+
     private Jugador jugadorActual;
     private GestorDatosImpl gestor;
     private JFrame menuInicio;
@@ -18,8 +20,8 @@ public class MenuPrincipal extends JFrame {
 
     public MenuPrincipal(Jugador jugador, GestorDatosImpl gestor, JFrame menuInicio) {
         this.jugadorActual = jugador;
-        this.gestor        = gestor;
-        this.menuInicio    = menuInicio;
+        this.gestor = gestor;
+        this.menuInicio = menuInicio;
 
         setTitle("Menú Principal");
         setSize(800, 800);
@@ -50,17 +52,24 @@ public class MenuPrincipal extends JFrame {
         centro.setOpaque(false);
         centro.setBorder(BorderFactory.createEmptyBorder(50, 220, 100, 220));
 
-        JButton btnJugar    = BotonesEstilo.crearBoton("  ♟  JUGAR XIANGQI  ",  new Color(255, 220, 80));
-        JButton btnCuenta   = BotonesEstilo.crearBoton("  ◈  MI CUENTA  ",      new Color(100, 180, 255));
-        JButton btnReportes = BotonesEstilo.crearBoton("  ≡  REPORTES  ",       new Color(180, 130, 255));
-        JButton btnLogout   = BotonesEstilo.crearBoton("  ⏻  LOG OUT  ",        new Color(200, 80, 80));
+        JButton btnJugar = BotonesEstilo.crearBoton("    JUGAR XIANGQI  ", new Color(255, 220, 80));
+        JButton btnCuenta = BotonesEstilo.crearBoton("    MI CUENTA  ", new Color(100, 180, 255));
+        JButton btnReportes = BotonesEstilo.crearBoton("    REPORTES  ", new Color(180, 130, 255));
+        JButton btnLogout = BotonesEstilo.crearBoton("    LOG OUT  ", new Color(200, 80, 80));
 
-        for (JButton b : new JButton[]{btnJugar, btnCuenta, btnReportes, btnLogout})
+        for (JButton b : new JButton[]{btnJugar, btnCuenta, btnReportes, btnLogout}) {
             b.setFont(new Font("Arial", Font.BOLD, 20));
+        }
 
         btnJugar.addActionListener(e -> iniciarJuego());
-        btnCuenta.addActionListener(e -> { new MiCuenta(jugadorActual, gestor, this); setVisible(false); });
-        btnReportes.addActionListener(e -> { new Reportes(jugadorActual, gestor, this); setVisible(false); });
+        btnCuenta.addActionListener(e -> {
+            new MiCuenta(jugadorActual, gestor, this);
+            setVisible(false);
+        });
+        btnReportes.addActionListener(e -> {
+            new Reportes(jugadorActual, gestor, this);
+            setVisible(false);
+        });
         btnLogout.addActionListener(e -> hacerLogout());
 
         centro.add(btnJugar);
@@ -74,7 +83,7 @@ public class MenuPrincipal extends JFrame {
 
     private String textoInfo() {
         return "Bienvenido,  " + jugadorActual.getUsername()
-             + "  •  Puntos: " + jugadorActual.getPuntos();
+                + "  •  Puntos: " + jugadorActual.getPuntos();
     }
 
     public void volverAqui() {
@@ -85,9 +94,11 @@ public class MenuPrincipal extends JFrame {
     private void iniciarJuego() {
         java.util.ArrayList<Jugador> todos = gestor.obtenerTodosJugadores();
         java.util.ArrayList<String> opciones = new java.util.ArrayList<>();
-        for (Jugador j : todos)
-            if (!j.getUsername().equals(jugadorActual.getUsername()) && j.isActivo())
+        for (Jugador j : todos) {
+            if (!j.getUsername().equals(jugadorActual.getUsername()) && j.isActivo()) {
                 opciones.add(j.getUsername());
+            }
+        }
         if (opciones.isEmpty()) {
             VentanaMensaje.mostrar(this, "No hay otros jugadores registrados.", "Sin oponente");
             return;
@@ -99,5 +110,9 @@ public class MenuPrincipal extends JFrame {
     private void hacerLogout() {
         menuInicio.setVisible(true);
         dispose();
+    }
+    
+    public JFrame getMenuInicio() {
+        return menuInicio;
     }
 }

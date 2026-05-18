@@ -28,14 +28,12 @@ public class Elefante extends Pieza {
         if (esRojo && nuevaFila < 5) return false;
         if (!esRojo && nuevaFila > 4) return false;
 
-        // Verificar "ojo del elefante" (casilla intermedia)
         int filaOjo = this.fila + df / 2;
         int colOjo = this.columna + dc / 2;
         if (tablero[filaOjo][colOjo] != null) {
-            return false; // Bloqueado
+            return false; 
         }
 
-        // No puede caer sobre pieza propia
         Pieza destino = tablero[nuevaFila][nuevaCol];
         if (destino != null && destino.isEsRojo() == this.esRojo) {
             return false;

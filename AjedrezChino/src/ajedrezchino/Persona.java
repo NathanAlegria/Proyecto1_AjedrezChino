@@ -9,6 +9,7 @@ package ajedrezchino;
  * @author Nathan
  */
 public class Persona {
+
     protected String username;
     protected String password;
 

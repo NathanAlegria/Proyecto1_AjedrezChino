@@ -30,14 +30,11 @@ public class VentanaLogs extends JFrame {
         panelTop.add(btnAtras);
         panel.add(panelTop, BorderLayout.NORTH);
 
-        // Título
         JLabel titulo = new JLabel("MIS ÚLTIMOS PARTIDOS", SwingConstants.CENTER);
         titulo.setFont(new Font("Serif", Font.BOLD, 28));
         titulo.setForeground(new Color(255, 220, 80));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-        panel.add(titulo, BorderLayout.BEFORE_FIRST_LINE); // se pisa con NORTH, usamos un wrapper
-
-        // Wrapper norte con back + título
+        panel.add(titulo, BorderLayout.BEFORE_FIRST_LINE);
         JPanel norte = new JPanel(new BorderLayout());
         norte.setOpaque(false);
         norte.add(panelTop, BorderLayout.NORTH);
@@ -60,7 +57,6 @@ public class VentanaLogs extends JFrame {
         area.setLineWrap(true);
         area.setWrapStyleWord(true);
 
-        // Scroll con fondo semitransparente
         JScrollPane scroll = new JScrollPane(area) {
             @Override
             protected void paintComponent(Graphics g) {

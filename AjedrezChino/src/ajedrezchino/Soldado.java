@@ -23,7 +23,7 @@ public class Soldado extends Pieza {
 
         if (!cruzoRio) {
             // Solo avanza 1 paso hacia adelante
-            // Rojo avanza hacia arriba (fila decrece), Negro avanza hacia abajo (fila crece)
+            // Rojo avanza hacia arriba , Negro avanza hacia abajo
             int avance = esRojo ? -1 : 1;
             if (df != avance || dc != 0) return false;
         } else {
@@ -34,7 +34,6 @@ public class Soldado extends Pieza {
             if (!esAvance && !esHorizontal) return false;
         }
 
-        // No puede caer sobre pieza propia
         Pieza destino = tablero[nuevaFila][nuevaCol];
         if (destino != null && destino.isEsRojo() == this.esRojo) {
             return false;

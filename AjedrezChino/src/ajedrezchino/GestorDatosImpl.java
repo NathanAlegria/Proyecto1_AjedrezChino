@@ -6,20 +6,19 @@ package ajedrezchino;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+
 /**
  *
  * @author Nathan
  */
+
 public class GestorDatosImpl implements GestorDatos {
     private ArrayList<Jugador> jugadores;
     private HashMap<String, ArrayList<String>> logs;
-    private LinkedHashMap<String, Partida> partidas; // LinkedHashMap mantiene orden de inserción
 
     public GestorDatosImpl() {
         jugadores = new ArrayList<>();
         logs      = new HashMap<>();
-        partidas  = new LinkedHashMap<>();
     }
 
     @Override
@@ -55,42 +54,13 @@ public class GestorDatosImpl implements GestorDatos {
     public void guardarLog(String username, String mensaje) {
         if (!logs.containsKey(username))
             logs.put(username, new ArrayList<>());
-        logs.get(username).add(0, mensaje); // más reciente primero
+        logs.get(username).add(0, mensaje);
     }
 
     @Override
     public ArrayList<String> obtenerLogsJugador(String username) {
         if (logs.containsKey(username)) return logs.get(username);
         return new ArrayList<>();
-    }
-
-    @Override
-    public void guardarPartida(String id, Partida partida) {
-        partidas.put(id, partida);
-    }
-
-    @Override
-    public Partida cargarPartida(String id) {
-        return partidas.get(id);
-    }
-
-    @Override
-    public boolean eliminarPartida(String id) {
-        if (partidas.containsKey(id)) {
-            partidas.remove(id);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public ArrayList<String> listarPartidas() {
-        // Retorna en orden de más reciente a más viejo
-        ArrayList<String> lista = new ArrayList<>(partidas.keySet());
-        ArrayList<String> invertida = new ArrayList<>();
-        for (int i = lista.size() - 1; i >= 0; i--)
-            invertida.add(lista.get(i));
-        return invertida;
     }
 
     public boolean usernameExiste(String username) {
@@ -101,8 +71,6 @@ public class GestorDatosImpl implements GestorDatos {
         ArrayList<Jugador> activos = new ArrayList<>();
         for (Jugador j : jugadores)
             if (j.isActivo()) activos.add(j);
-
-        // Burbuja por puntos de mayor a menor
         for (int i = 0; i < activos.size() - 1; i++)
             for (int k = 0; k < activos.size() - 1 - i; k++)
                 if (activos.get(k).getPuntos() < activos.get(k+1).getPuntos()) {

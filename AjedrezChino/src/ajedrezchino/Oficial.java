@@ -31,7 +31,6 @@ public class Oficial extends Pieza {
             if (nuevaFila < 0 || nuevaFila > 2 || nuevaCol < 3 || nuevaCol > 5) return false;
         }
 
-        // No puede caer sobre pieza propia
         Pieza destino = tablero[nuevaFila][nuevaCol];
         if (destino != null && destino.isEsRojo() == this.esRojo) {
             return false;

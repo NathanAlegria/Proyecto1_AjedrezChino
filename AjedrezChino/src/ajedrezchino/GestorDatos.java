@@ -23,13 +23,4 @@ public interface GestorDatos {
     void guardarLog(String username, String mensaje);
 
     ArrayList<String> obtenerLogsJugador(String username);
-
-    // Partidas
-    void guardarPartida(String id, Partida partida);
-
-    Partida cargarPartida(String id);
-
-    boolean eliminarPartida(String id);
-
-    ArrayList<String> listarPartidas();
 }
